@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBank — Bank Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #090D16;
+            --bg-surface: rgba(18, 24, 38, 0.7);
+            --bg-card: rgba(23, 31, 50, 0.65);
+            --bg-card-hover: rgba(30, 41, 66, 0.85);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(99, 102, 241, 0.3);
+            --primary: #6366F1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --emerald: #10B981;
+            --emerald-glow: rgba(16, 185, 129, 0.25);
+            --rose: #F43F5E;
+            --rose-glow: rgba(244, 63, 94, 0.25);
+            --amber: #F59E0B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --text-dim: #64748B;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.8) 0px, transparent 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1380px;
+            margin: 0 auto;
+            padding: 24px 28px;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #4F46E5, #06B6D4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--primary-glow);
+            font-size: 22px;
+        }
+
+        .brand h1 {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #FFFFFF, #CBD5E1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand p {
+            font-size: 12px;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--emerald);
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--emerald);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4F46E5, #6366F1);
+            color: #FFFFFF;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4338CA, #4F46E5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* METRICS BAR */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: var(--border-highlight);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* MAIN LAYOUT */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* CONTROLS */
+        .table-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+
+        /* TABLE */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: rgba(15, 23, 42, 0.7);
+            padding: 14px 16px;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-savings {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-current {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818CF8;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .badge-deposit {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10B981;
+        }
+
+        .badge-withdraw {
+            background: rgba(244, 63, 94, 0.12);
+            color: #F43F5E;
+        }
+
+        .balance-cell {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: #F1F5F9;
+        }
+
+        .table-action-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 6px;
+            transition: all 0.2s;
+        }
+
+        .table-action-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #FFFFFF;
+        }
+
+        /* ACTION CENTER / TRANSACTIONS */
+        .type-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .toggle-btn.active-deposit {
+            background: var(--emerald);
+            color: #FFFFFF;
+            box-shadow: 0 4px 15px var(--emerald-glow);
+        }
+
+        .toggle-btn.active-withdraw {
+            background: var(--rose);
+            color: #FFFFFF;
+            box-shadow: 0 4px 15px var(--rose-glow);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+            font-family: var(--font-body);
+            transition: all 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        .chip-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818CF8;
+            border-color: var(--border-highlight);
+        }
+
+        .oop-notice {
+            background: rgba(99, 102, 241, 0.08);
+            border-left: 3px solid var(--primary);
+            padding: 12px 14px;
+            border-radius: 0 10px 10px 0;
+            font-size: 12px;
+            color: #C7D2FE;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-submit-deposit {
+            background: linear-gradient(135deg, #059669, #10B981);
+            color: #FFFFFF;
+            box-shadow: 0 4px 18px var(--emerald-glow);
+        }
+
+        .btn-submit-deposit:hover {
+            background: linear-gradient(135deg, #047857, #059669);
+            transform: translateY(-2px);
+        }
+
+        .btn-submit-withdraw {
+            background: linear-gradient(135deg, #E11D48, #F43F5E);
+            color: #FFFFFF;
+            box-shadow: 0 4px 18px var(--rose-glow);
+        }
+
+        .btn-submit-withdraw:hover {
+            background: linear-gradient(135deg, #BE123C, #E11D48);
+            transform: translateY(-2px);
+        }
+
+        /* OOP CONCEPT SHOWCASE CARD */
+        .oop-card {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.4), rgba(15, 23, 42, 0.6));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .oop-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #A5B4FC;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .oop-list {
+            list-style: none;
+            font-size: 13px;
+        }
+
+        .oop-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .oop-item:last-child {
+            border-bottom: none;
+        }
+
+        .oop-tag {
+            background: rgba(99, 102, 241, 0.15);
+            color: #C7D2FE;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* TOAST ALERT */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 16px 20px;
+            color: #FFFFFF;
+            font-size: 14px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            max-width: 420px;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        #toast.success {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: #064E3B;
+        }
+
+        #toast.error {
+            border-color: rgba(244, 63, 94, 0.5);
+            background: #881337;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: #111827;
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            padding: 28px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.open .modal-box {
+            transform: scale(1);
+        }
+
+        @media (max-width: 1024px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; gap: 14px; align-items: flex-start; }
+            .header-actions { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- HEADER -->
+    <header>
+        <div class="brand">
+            <div class="brand-logo">🏦</div>
+            <div>
+                <h1>SmartBank</h1>
+                <p>Enterprise Banking System (Java 21 + MySQL + OOP Architecture)</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span>MySQL Connected</span>
+            </div>
+            <button class="btn btn-secondary" onclick="fetchData()">🔄 Refresh</button>
+            <button class="btn btn-primary" onclick="openNewAccountModal()">+ Open Account</button>
+        </div>
+    </header>
+
+    <!-- METRICS -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-label">Total Vault Deposits</div>
+            <div class="metric-value" id="statTotalBal">₹0.00</div>
+            <div class="metric-sub">Across all customer accounts</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Total Accounts</div>
+            <div class="metric-value" id="statTotalAccs">0</div>
+            <div class="metric-sub" id="statAccTypes">0 Savings · 0 Current</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Completed Transactions</div>
+            <div class="metric-value" id="statTotalTx">0</div>
+            <div class="metric-sub">Stored in MySQL transactions table</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">Backend Engine</div>
+            <div class="metric-value" style="font-size: 22px; color: #818CF8;">Java 21 OOP</div>
+            <div class="metric-sub">Polymorphism & Exception handling</div>
+        </div>
+    </div>
+
+    <!-- MAIN TWO COLUMN GRID -->
+    <div class="main-grid">
+        <!-- LEFT COLUMN: ACCOUNTS TABLE + TRANSACTIONS -->
+        <div>
+            <!-- ACCOUNTS CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">👥 Bank Accounts</div>
+                </div>
+
+                <div class="table-controls">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by customer name or account number..." oninput="filterAccounts()">
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+                        <button class="filter-btn" onclick="setFilter('savings', this)">Savings</button>
+                        <button class="filter-btn" onclick="setFilter('current', this)">Current</button>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Account No</th>
+                                <th>Customer Name</th>
+                                <th>Type</th>
+                                <th>Phone</th>
+                                <th>Balance</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accountsTableBody">
+                            <tr><td colspan="6" style="text-align: center; color: var(--text-dim);">Loading accounts...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- AUDIT / TRANSACTIONS LEDGER -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📜 Real-time Transaction Ledger</div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Account</th>
+                                <th>Customer</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody">
+                            <tr><td colspan="6" style="text-align: center; color: var(--text-dim);">Loading transactions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: ACTION TERMINAL & OOP INSPECTOR -->
+        <div>
+            <!-- QUICK TRANSACT TERMINAL -->
+            <div class="card">
+                <div class="card-title" style="margin-bottom: 16px;">⚡ Quick Transaction</div>
+
+                <div class="type-toggle">
+                    <button id="toggleDeposit" class="toggle-btn active-deposit" onclick="setTxType('DEPOSIT')">
+                        ▲ Deposit Money
+                    </button>
+                    <button id="toggleWithdraw" class="toggle-btn" onclick="setTxType('WITHDRAW')">
+                        ▼ Withdraw Money
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Customer Account</label>
+                    <select id="txAccountSelect" class="form-select" onchange="onAccountSelected()">
+                        <option value="">-- Choose Account --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Amount (₹)</label>
+                    <input type="number" id="txAmountInput" class="form-input" placeholder="e.g. 1000" min="1" step="any">
+                    <div class="chip-group">
+                        <button class="chip" onclick="setAmountPreset(500)">+₹500</button>
+                        <button class="chip" onclick="setAmountPreset(1000)">+₹1,000</button>
+                        <button class="chip" onclick="setAmountPreset(5000)">+₹5,000</button>
+                        <button class="chip" onclick="setAmountPreset(10000)">+₹10,000</button>
+                    </div>
+                </div>
+
+                <div class="oop-notice" id="oopNoticeText">
+                    <strong>Savings Account:</strong> Withdrawal allowed up to balance.<br>
+                    <strong>Current Account:</strong> ₹10,000 Overdraft limit available.
+                </div>
+
+                <button id="btnExecuteTx" class="btn-submit btn-submit-deposit" onclick="executeTransaction()">
+                    Execute Deposit
+                </button>
+            </div>
+
+            <!-- OOP CONCEPTS INSPECTOR -->
+            <div class="oop-card">
+                <div class="oop-title">🎓 OOPs Concepts in Action</div>
+                <ul class="oop-list">
+                    <li class="oop-item">
+                        <span class="oop-tag">Inheritance</span>
+                        <div><code>SavingsAccount</code> & <code>CurrentAccount</code> extend abstract <code>Account</code>.</div>
+                    </li>
+                    <li class="oop-item">
+                        <span class="oop-tag">Polymorphism</span>
+                        <div><code>withdraw()</code> is overridden differently for overdraft vs normal rules.</div>
+                    </li>
+                    <li class="oop-item">
+                        <span class="oop-tag">Exception</span>
+                        <div>Custom <code>InsufficientBalanceException</code> is thrown on invalid withdrawal.</div>
+                    </li>
+                    <li class="oop-item">
+                        <span class="oop-tag">Interface</span>
+                        <div><code>Transactable</code> enforces standard deposit/withdraw contracts.</div>
+                    </li>
+                    <li class="oop-item">
+                        <span class="oop-tag">Encapsulation</span>
+                        <div>Account balance is strictly private, updated through verified mutators.</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OPEN ACCOUNT MODAL -->
+<div class="modal-overlay" id="accountModal">
+    <div class="modal-box">
+        <h2 style="font-family: var(--font-display); font-size: 20px; margin-bottom: 20px;">Open New Bank Account</h2>
+        <form onsubmit="handleCreateAccount(event)">
+            <div class="form-group">
+                <label class="form-label">Account Number</label>
+                <input type="number" id="newAccNo" class="form-input" required placeholder="e.g. 100005">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Customer Full Name</label>
+                <input type="text" id="newName" class="form-input" required placeholder="e.g. Ragul S">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Account Type</label>
+                <select id="newType" class="form-select">
+                    <option value="Savings">Savings Account (Standard)</option>
+                    <option value="Current">Current Account (₹10,000 Overdraft)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="text" id="newPhone" class="form-input" required placeholder="e.g. 9876543210">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Initial Deposit (₹)</label>
+                <input type="number" id="newBalance" class="form-input" required placeholder="e.g. 5000" min="0">
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Create Account</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- TOAST ALERT -->
+<div id="toast">
+    <span id="toastIcon"></span>
+    <span id="toastMsg"></span>
+</div>
+
+<script>
+    let allAccounts = [];
+    let currentFilter = 'all';
+    let currentTxType = 'DEPOSIT';
+
+    async function fetchData() {
+        await Promise.all([loadStats(), loadAccounts(), loadTransactions()]);
+    }
+
+    async function loadStats() {
+        try {
+            const res = await fetch('/api/stats');
+            const data = await res.json();
+            document.getElementById('statTotalBal').textContent = '₹' + data.totalBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
+            document.getElementById('statTotalAccs').textContent = data.totalAccounts;
+            document.getElementById('statAccTypes').textContent = `${data.savingsAccounts} Savings · ${data.currentAccounts} Current`;
+            document.getElementById('statTotalTx').textContent = data.totalTransactions;
+        } catch (e) {
+            console.error('Failed to load stats:', e);
+        }
+    }
+
+    async function loadAccounts() {
+        try {
+            const res = await fetch('/api/accounts');
+            allAccounts = await res.json();
+            renderAccountsTable();
+            populateAccountDropdown();
+        } catch (e) {
+            console.error('Failed to load accounts:', e);
+        }
+    }
+
+    async function loadTransactions() {
+        try {
+            const res = await fetch('/api/transactions');
+            const txs = await res.json();
+            const tbody = document.getElementById('transactionsTableBody');
+            if (txs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-dim);">No transactions yet.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = txs.map(t => `
+                <tr>
+                    <td style="color: var(--text-dim); font-size: 12px;">#${t.id}</td>
+                    <td><strong>${t.accountNo}</strong></td>
+                    <td>${t.customerName}</td>
+                    <td>
+                        <span class="badge ${t.type === 'DEPOSIT' ? 'badge-deposit' : 'badge-withdraw'}">
+                            ${t.type === 'DEPOSIT' ? '▲ DEPOSIT' : '▼ WITHDRAW'}
+                        </span>
+                    </td>
+                    <td class="balance-cell" style="color: ${t.type === 'DEPOSIT' ? '#10B981' : '#F43F5E'};">
+                        ${t.type === 'DEPOSIT' ? '+' : '-'}₹${t.amount.toLocaleString('en-IN', {minimumFractionDigits: 2})}
+                    </td>
+                    <td style="color: var(--text-dim); font-size: 12px;">${t.time}</td>
+                </tr>
+            `).join('');
+        } catch (e) {
+            console.error('Failed to load transactions:', e);
+        }
+    }
+
+    function renderAccountsTable() {
+        const tbody = document.getElementById('accountsTableBody');
+        const search = document.getElementById('searchInput').value.toLowerCase().trim();
+
+        const filtered = allAccounts.filter(a => {
+            const matchesSearch = a.customerName.toLowerCase().includes(search) || a.accountNo.toString().includes(search);
+            const matchesFilter = currentFilter === 'all' || a.accountType.toLowerCase() === currentFilter;
+            return matchesSearch && matchesFilter;
+        });
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-dim);">No accounts found.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(a => `
+            <tr>
+                <td><strong>${a.accountNo}</strong></td>
+                <td><strong>${a.customerName}</strong></td>
+                <td>
+                    <span class="badge ${a.accountType.toLowerCase() === 'savings' ? 'badge-savings' : 'badge-current'}">
+                        ${a.accountType}
+                    </span>
+                </td>
+                <td style="color: var(--text-muted);">${a.phone}</td>
+                <td class="balance-cell">₹${a.balance.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                <td>
+                    <button class="table-action-btn" onclick="selectForTx(${a.accountNo}, 'DEPOSIT')">Deposit</button>
+                    <button class="table-action-btn" onclick="selectForTx(${a.accountNo}, 'WITHDRAW')">Withdraw</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function populateAccountDropdown() {
+        const select = document.getElementById('txAccountSelect');
+        const currentVal = select.value;
+        select.innerHTML = '<option value="">-- Choose Account --</option>' + 
+            allAccounts.map(a => `<option value="${a.accountNo}">${a.accountNo} - ${a.customerName} (${a.accountType})</option>`).join('');
+        if (currentVal) select.value = currentVal;
+    }
+
+    function selectForTx(accountNo, type) {
+        document.getElementById('txAccountSelect').value = accountNo;
+        setTxType(type);
+        onAccountSelected();
+        document.getElementById('txAmountInput').focus();
+    }
+
+    function onAccountSelected() {
+        const accNo = parseInt(document.getElementById('txAccountSelect').value);
+        const account = allAccounts.find(a => a.accountNo === accNo);
+        const notice = document.getElementById('oopNoticeText');
+        if (account) {
+            if (account.accountType.toLowerCase() === 'savings') {
+                notice.innerHTML = `<strong>${account.customerName} (${account.accountType}):</strong> Current Balance: <strong>₹${account.balance.toLocaleString('en-IN')}</strong>.<br>Rule: Withdrawal cannot exceed current balance (throws <code>InsufficientBalanceException</code>).`;
+            } else {
+                notice.innerHTML = `<strong>${account.customerName} (${account.accountType}):</strong> Current Balance: <strong>₹${account.balance.toLocaleString('en-IN')}</strong>.<br>Rule: Overdraft of <strong>₹10,000</strong> permitted! Max withdrawal: <strong>₹${(account.balance + 10000).toLocaleString('en-IN')}</strong>.`;
+            }
+        }
+    }
+
+    function setFilter(filter, btn) {
+        currentFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderAccountsTable();
+    }
+
+    function filterAccounts() {
+        renderAccountsTable();
+    }
+
+    function setTxType(type) {
+        currentTxType = type;
+        const depBtn = document.getElementById('toggleDeposit');
+        const withBtn = document.getElementById('toggleWithdraw');
+        const execBtn = document.getElementById('btnExecuteTx');
+
+        if (type === 'DEPOSIT') {
+            depBtn.className = 'toggle-btn active-deposit';
+            withBtn.className = 'toggle-btn';
+            execBtn.className = 'btn-submit btn-submit-deposit';
+            execBtn.textContent = 'Execute Deposit';
+        } else {
+            depBtn.className = 'toggle-btn';
+            withBtn.className = 'toggle-btn active-withdraw';
+            execBtn.className = 'btn-submit btn-submit-withdraw';
+            execBtn.textContent = 'Execute Withdraw (with OOP Validation)';
+        }
+    }
+
+    function setAmountPreset(amt) {
+        document.getElementById('txAmountInput').value = amt;
+    }
+
+    async function executeTransaction() {
+        const accountNo = document.getElementById('txAccountSelect').value;
+        const amount = document.getElementById('txAmountInput').value;
+
+        if (!accountNo) {
+            showToast('Please select a customer account.', 'error');
+            return;
+        }
+        if (!amount || parseFloat(amount) <= 0) {
+            showToast('Please enter a valid amount greater than 0.', 'error');
+            return;
+        }
+
+        const endpoint = currentTxType === 'DEPOSIT' ? '/api/deposit' : '/api/withdraw';
+        try {
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accountNo, amount })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                showToast(`✓ ${data.message} | New Balance: ₹${data.newBalance.toLocaleString('en-IN')}`, 'success');
+                document.getElementById('txAmountInput').value = '';
+                await fetchData();
+                onAccountSelected();
+            } else {
+                showToast(`⚠️ ${data.error}`, 'error');
+            }
+        } catch (e) {
+            showToast('Network error: ' + e.message, 'error');
+        }
+    }
+
+    function openNewAccountModal() {
+        // Suggest next account number
+        const nextNo = allAccounts.length > 0 ? Math.max(...allAccounts.map(a => a.accountNo)) + 1 : 100001;
+        document.getElementById('newAccNo').value = nextNo;
+        document.getElementById('accountModal').classList.add('open');
+    }
+
+    function closeModal() {
+        document.getElementById('accountModal').classList.remove('open');
+    }
+
+    async function handleCreateAccount(e) {
+        e.preventDefault();
+        const accountNo = document.getElementById('newAccNo').value;
+        const customerName = document.getElementById('newName').value;
+        const accountType = document.getElementById('newType').value;
+        const phone = document.getElementById('newPhone').value;
+        const balance = document.getElementById('newBalance').value;
+
+        try {
+            const res = await fetch('/api/accounts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accountNo, customerName, accountType, phone, balance })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                showToast('✓ Account created successfully!', 'success');
+                closeModal();
+                await fetchData();
+            } else {
+                showToast('Error: ' + data.error, 'error');
+            }
+        } catch (err) {
+            showToast('Network error: ' + err.message, 'error');
+        }
+    }
+
+    function showToast(msg, type = 'success') {
+        const toast = document.getElementById('toast');
+        const icon = document.getElementById('toastIcon');
+        const message = document.getElementById('toastMsg');
+
+        toast.className = type + ' show';
+        icon.textContent = type === 'success' ? '✅' : '❌';
+        message.textContent = msg;
+
+        setTimeout(() => {
+            toast.className = '';
+        }, 5000);
+    }
+
+    // Initialize
+    fetchData();
+</script>
+
+</body>
+</html>
